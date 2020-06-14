@@ -3,11 +3,10 @@ use ArmoredCore\WebObjects\Asset;
 use ArmoredCore\Facades\AssetBundler;
 use ArmoredCore\WebObjects\URL;
 use ArmoredCore\WebObjects\Session;
+use ArmoredCore\WebObjects\Data;
 
 $player = Session::get("player");
-if(isset($_SESSION["games"])) {
-    $games = Session::get("games");
-}
+$games = Data::get("games");
 ?>
 
 <!DOCTYPE html>
@@ -16,33 +15,9 @@ if(isset($_SESSION["games"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= Asset::css('/bootstrap4.min.css')?>" media="screen" >
-    <title>Document</title>
+    <link rel="stylesheet" href="<?= Asset::css('/game.css')?>" media="screen" >
+    <title>Main Menu</title>
 </head>
-<style>
-    body{
-        background-color: #212121;
-        color:white;
-    }
-
-
-
-    .box{
-        background-color: #7bf8e9;
-        border-radius: 12px;
-        color:black;
-    }
-
-    .main{
-        margin:auto;
-        margin-top: 15%;
-    }
-
-    .form-control{
-        background-color: #212121;
-        border:black;
-        color:white;
-    }
-</style>
 <body>
 <div class="container main">
     <div class="row justify-content-center">
@@ -51,7 +26,7 @@ if(isset($_SESSION["games"])) {
                 <h1>Match History</h1>
                 <br>
                 <?php
-                if(isset($games)){
+                if($games != null){
                 ?>
                     <table class="table table-dark table-striped">
                         <thead>
@@ -98,7 +73,7 @@ if(isset($_SESSION["games"])) {
             </div>
         </div>
         <div class="col">
-            <div id="PlayerInfo" class="box p-5">
+            <div id="PlayerInfo" class="box pt-5 pl-5 pr-5 pb-3">
                 <label>Name:</label>
                 <span><?php echo $player->nomecompleto ?></span>
                 <br>
@@ -109,9 +84,16 @@ if(isset($_SESSION["games"])) {
                 <span><?php echo $player->email ?></span>
                 <br>
                 <label>Permissions:</label>
-                <span><?php echo $player->isadmin ? 'Jogador' : 'Administrador' ?></span>
+                <span><?php echo $player->isadmin ? 'Administrator' : 'Jogador' ?></span>
                 <br>
-
+                <br>
+                <?php
+                if($player->isadmin){
+                    ?>
+                    <a href="<?= URL::toRoute('game/backoffice')?>"><button class="btn btn-dark">Administration</button></a>
+                    <?php
+                }
+                ?>
             </div>
         </div>
     </div>

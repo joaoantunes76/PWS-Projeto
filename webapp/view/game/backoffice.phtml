@@ -1,0 +1,63 @@
+<?php
+use ArmoredCore\WebObjects\Asset;
+use ArmoredCore\Facades\AssetBundler;
+use ArmoredCore\WebObjects\URL;
+use ArmoredCore\WebObjects\Data;
+$players = Data::get('players');
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?= Asset::css('/bootstrap4.min.css')?>" media="screen" >
+    <link rel="stylesheet" href="<?= Asset::css('/game.css')?>" media="screen" >
+    <title>Backoffice</title>
+</head>
+<body>
+<div class="container main">
+    <div class="row justify-content-center">
+        <div class="col">
+
+            <div id="matchHistory" class="box text-center pt-3 pb-5">
+                <h1>Manage Players</h1>
+                <br>
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Birth Date</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Administrator</th>
+                        <th>Banned</th>
+                        <th>Opções</th>
+                    </thead>
+                    <tbody>
+                    <?php
+                        foreach($players as $player)
+                        {
+                        ?>
+                            <tr>
+                                <td><?php echo $player->id ?></td>
+                                <td><?php echo $player->nomecompleto ?></td>
+                                <td><?php echo $player->datanascimento ?></td>
+                                <td><?php echo $player->email ?></td>
+                                <td><?php echo $player->username ?></td>
+                                <td><?php echo $player->isadmin ?></td>
+                                <td><?php echo $player->isbanned ?></td>
+                                <td><a href="changebanstatus/<?php echo $player->id ?>"<button class="btn <?php echo $player->isbanned ? 'btn-warning' : 'btn-danger' ?>"><?php echo $player->isbanned ? 'Unban' : 'Ban' ?></button></td>
+                            </tr>
+                        <?php
+                        }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

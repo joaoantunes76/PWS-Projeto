@@ -10,7 +10,22 @@ class GameController extends BaseController
     public function index(){
         if(Session::has('player'))
         {
-            return View::make('game.index');
+            $user = Session::get('player');
+            $i = 1;
+            $gamesIndex = 0;
+            $games = null;
+            while($i <= sizeof(Game::all()))
+            {
+                try {
+                    $game = Game::find($i);
+                    if($game->idutilizador == $user->id){
+                        $games[$gamesIndex] = $game;
+                        $gamesIndex++;
+                    }
+                }catch(Exception $ex){}
+                $i++;
+            }
+            return View::make('game.index', ['games' => $games]);
         }
         else
         {
@@ -27,6 +42,42 @@ class GameController extends BaseController
         {
             Redirect::toRoute('game/login');
         }
+    }
+
+    public function top10(){
+        $sql = "SELECT username, count(games.id) as 'victories'
+                FROM users
+                    INNER JOIN games ON users.id = games.idUtilizador
+                WHERE resultado LIKE 'victory'
+                GROUP BY username
+                ORDER BY victories DESC;";
+        $games = Game::find_by_sql($sql);
+        return View::make('game.top10', ['games' => $games]);
+    }
+
+    public function backoffice(){
+        if(Session::has('player'))
+        {
+            $player = Session::get('player');
+            if($player->isadmin) {
+                $players = User::all();
+                return View::make('game.backoffice', ['players' => $players]);
+            }
+            else{
+                return View::make('game.index');
+            }
+        }
+        else
+        {
+            Redirect::toRoute('game/login');
+        }
+    }
+
+    public function changeBanStatus($id){
+        $player = User::find($id);
+        $player->isbanned = !$player->isbanned;
+        $player->save();
+        Redirect::toRoute('game/backoffice');
     }
 
     public function logout(){
@@ -59,25 +110,6 @@ class GameController extends BaseController
             if(trim($user->username) == trim($username) && trim($user->password) == trim($password))
             {
                 if(!$user->isbanned) {
-                    $i = 1;
-                    $gamesIndex = 0;
-                    while($i <= sizeof(Game::all()))
-                    {
-                        try {
-                            $game = Game::find($i);
-                            if($game->idutilizador == $user->id){
-                                $games[$gamesIndex] = $game;
-                                $gamesIndex++;
-                            }
-                        }catch(Exception $ex){
-                            echo  sizeof(Game::all());
-                        }
-                        $i++;
-                    }
-                    if(isset($games))
-                    {
-                        Session::set("games", $games);
-                    }
                     Session::set("player", $user);
                     Redirect::toRoute('game/index');
                 }
