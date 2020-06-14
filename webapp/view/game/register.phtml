@@ -1,0 +1,102 @@
+<?php
+use ArmoredCore\WebObjects\Asset;
+use ArmoredCore\Facades\AssetBundler;
+use ArmoredCore\WebObjects\URL;
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?= Asset::css('/bootstrap4.min.css')?>" media="screen" >
+    <title>Document</title>
+</head>
+<style>
+    body{
+        background-color: #212121;
+    }
+
+    #loginBox{
+        background-color: #7bf8e9;
+        height: 750px;
+        width: 500px;
+        margin:auto;
+        margin-top: 25%;
+        border-radius: 12px;
+    }
+
+    .form-control{
+        background-color: #212121;
+        border:black;
+        color:white;
+    }
+</style>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col">
+            <div id="loginBox">
+                <div class="container">
+                    <br>
+                    <div class="row text-center">
+                        <div class="col">
+                            <h1>Register</h1>
+                        </div>
+                    </div>
+                    <form method="post" action="<?= URL::toRoute('game/createAccount')?>">
+                        <div class="row justify-content-center">
+                            <div class="col-9 mt-3">
+                                <label for="username">Full Name:</label>
+                                <input type="text" name="nomeCompleto" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-9 mt-3">
+                                <label for="username">Birth Date:</label>
+                                <input type="date" name="dataNascimento" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-9 mt-3">
+                                <label for="username">Username:</label>
+                                <input type="text" name="username" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-9 mt-3">
+                                <label for="username">Email:</label>
+                                <input type="text" name="email" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-9 mt-3">
+                                <label for="password">Password:</label>
+                                <input type="password" name="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-9 mt-3">
+                                <label for="password">Confirm Password:</label>
+                                <input type="password" name="confirmPassword" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-5 mt-5">
+                                <input type="submit" value="Register" class="form-control btn btn-dark">
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row justify-content-end">
+                        <div class="col-5">
+                            <br>
+                            <span>Click <a href="<?= URL::toRoute('game/login')?>">here</a> to sign in!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
