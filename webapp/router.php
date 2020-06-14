@@ -27,6 +27,9 @@ Router::get('game/login', 'GameController/login');
 Router::post('game/authenticate', 'GameController/authenticate');
 Router::post('game/logout', 'GameController/logout');
 Router::post('game/game', 'GameController/game');
+Router::get('game/backoffice', 'GameController/backoffice');
+Router::get('game/changebanstatus', 'GameController/changebanstatus');
+Router::get('game/top10', 'GameController/top10');
 
 Router::post('gameLogic/lancarDados', 'GameLogicController/lancarDados');
 
