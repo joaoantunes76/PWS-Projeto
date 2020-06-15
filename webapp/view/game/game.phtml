@@ -3,8 +3,48 @@ use ArmoredCore\WebObjects\Asset;
 use ArmoredCore\Facades\AssetBundler;
 use ArmoredCore\WebObjects\URL;
 use ArmoredCore\WebObjects\Session;
+use ArmoredCore\WebObjects\Data;
 
 $player = Session::get("player");
+
+if(Session::has("dados")){
+    $dados = Session::get("dados");
+    $dice0 = 'Game/Dice/'.(string)$dados[0].'.png';
+    $dice1 = 'Game/Dice/'.(string)$dados[1].'.png';
+}
+else{
+    $dice0 = "Game/Dice/1.png";
+    $dice1 = "Game/Dice/1.png";
+}
+
+if(Session::has("podeLancarDados")) {
+    $podeLancarDados = Session::get("podeLancarDados");
+    echo $podeLancarDados;
+}
+
+if(Session::has("selectedNums")){
+    $selectedNums = Session::get("selectedNums");
+}
+else{
+    $selectedNums = array();
+}
+
+if(Session::has("playerNums")){
+    $playerNums = Session::get("playerNums");
+}
+else{
+    $playerNums = array();
+}
+
+$cpuTurn = Session::get("cpuTurn");
+if($cpuTurn){
+    $cpuPlays = Session::get("cpuPlays");
+}
+else{
+    $cpuPlays = array();
+}
+$PlayerScore = Session::get("PlayerScore");
+$CpuScore = Session::get("CpuScore");
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +54,6 @@ $player = Session::get("player");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= Asset::css('/bootstrap4.min.css')?>" media="screen" >
     <title>Game</title>
-    <script src="<?= Asset::js('/jquery.js')?>"></script>
 </head>
 <style>
     html, body{
@@ -44,12 +83,10 @@ $player = Session::get("player");
     }
 
     .dados{
-        background-color: #7e65f6;
-        text-align: center;
-        padding-top: .2rem;
-        padding-bottom: .05rem;
-        margin: ;
+        height: 64px;
+        width: 64px;
         border-radius: 12px;
+        margin:auto;
     }
 
     .btn-number{
@@ -62,14 +99,28 @@ $player = Session::get("player");
         cursor: pointer;
     }
 
+    <?php
+    if(isset($dados)){
+    ?>
     .btn-number:hover{
         background: #7bf8e0;
     }
-
     .btn-number:active{
         background: #4acbaf;
     }
+    <?php
+    }
+    ?>
 
+    .disabled{
+        background: rgba(0, 255, 212, 0.49);
+    }
+    .disabled:hover{
+        background: rgba(0, 255, 212, 0.49);
+    }
+    .disabled:active{
+        background: rgba(0, 255, 212, 0.49);
+    }
     .gameBoard{
         height: 800px;
         width: 500px;
@@ -100,6 +151,7 @@ $player = Session::get("player");
 <div class="text-center mt-5 mb-5">
     <h1> <?php echo $player->username ?> vs CPU</h1>
     <br>
+    <a href="<?= URL::toRoute('game/giveup')?>"><button class="btn btn-dark">Give up</button></a>
 </div>
 <br>
 <div class="container mt-5">
@@ -116,7 +168,7 @@ $player = Session::get("player");
                                 ?>
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="btn-number btnPlayer1 <?php echo $i ?>"><h1><?php echo $i ?></h1></div>
+                                        <a <?php if(isset($dados) && !in_array($i, $playerNums)) echo 'href="select/'.$i.'"' ?>"><div class=" <?php if(in_array($i, $selectedNums) || in_array($i, $playerNums)) echo "disabled" ?>  btn-number btnPlayer1 <?php echo $i ?>"><h1><?php echo $i ?></h1></div></a>
                                     </div>
                                 </div>
                                 <?php
@@ -129,22 +181,22 @@ $player = Session::get("player");
                         <div class="container">
                             <div class="row justify-content-center">
                                 <div class="col">
-                                    <div class="points" id="Player1Points"><h1>0</h1></div>c
+                                    <div class="points" id="Player1Points"><h1><?php echo $PlayerScore ?></h1></div>c
                                 </div>
                                 <div class="col">
-                                    <div class="points" id="Player2Points"><h1>0</h1></div>
+                                    <div class="points" id="Player2Points"><h1><?php echo $CpuScore ?></h1></div>
                                 </div>
                             </div>
                             <div class="row justify-content-center middleButtons">
-                                <button class="btn lancarBtn" id="btnLancarDados"><b>Lançar Dados</b></button>
+                                <a <?php if($podeLancarDados){?> href="<?= URL::toRoute('game/lancarDados') ?>" <?php }?><button class=" <?php if(!$podeLancarDados) echo "disabled "; ?>btn lancarBtn" id="btnLancarDados"><b>Throw Dice</b></button></a>
                             </div>
                             <br>
                             <div class="row justify-content-center">
                                 <div class="col">
-                                    <div class="dados" id="dado1"><h1><img src="" height="64px"></h1></div>c
+                                    <div class="dados" id="dado1"><h1><img src="<?= Asset::image($dice0) ?>" height="64px"></h1></div>c
                                 </div>
                                 <div class="col">
-                                    <div class="dados" id="dado2"><h1><img src="" height="64px"></h1></div>
+                                    <div class="dados" id="dado2"><h1><img src="<?= Asset::image($dice1) ?>" height="64px"></h1></div>
                                 </div>
                             </div>
                         </div>
@@ -158,7 +210,7 @@ $player = Session::get("player");
                                 ?>
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="btn-number btnPlayer2 <?php echo $i ?>"><h1><?php echo $i ?></h1></div>
+                                        <div class=" <?php if(in_array($i, $cpuPlays)) echo "disabled" ?> btn-number btnPlayer2 <?php echo $i ?>"><h1><?php echo $i ?></h1></div>
                                     </div>
                                 </div>
                                 <?php
@@ -166,31 +218,10 @@ $player = Session::get("player");
                             ?>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
 </body>
-<script>
-    $(document).ready(function () {
-        $('#btnLancarDados').click(function(){
-            var num1, num2;
-            num1= getDado();
-            num2 = getDado;
-            console.log(num1 + " " + num2);
-        })
-        
-        function getDado(){
-            $.ajax({
-                type: "post",
-                url: "<?= URL::toRoute('gameLogic/lancarDados')?>",
-                success: function (response) {
-                    return response;
-                }
-            });
-        }
-    });
-</script>
 </html>

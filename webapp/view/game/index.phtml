@@ -34,17 +34,17 @@ $games = Data::get("games");
                             <th>Resultado</th>
                         </thead>
                         <tbody>
+                        <?php
+                        foreach($games as $game)
+                        {
+                        ?>
                             <tr>
-                                <?php
-                                foreach($games as $game)
-                                {
-                                ?>
                                 <td><?php echo $game->datahora ?></td>
                                 <td><?php echo $game->resultado ?></td>
-                                <?php
-                                }
-                                ?>
                             </tr>
+                        <?php
+                        }
+                        ?>
                 <?php
                 }
                 else{
@@ -60,9 +60,7 @@ $games = Data::get("games");
         <div class="col mt-5">
             <div class="container">
                 <div class="row justify-content-center">
-                    <form method="post" action="game">
-                    <input type="submit" class="btn btn-dark" value="Start Game">
-                    </form>
+                    <a href="<?= URL::toRoute("game/newGame") ?>" class="btn btn-dark">Start Game</a>
                 </div>
                 <br>
                 <div class="row justify-content-center">
@@ -87,6 +85,7 @@ $games = Data::get("games");
                 <span><?php echo $player->isadmin ? 'Administrator' : 'Jogador' ?></span>
                 <br>
                 <br>
+                <a href="edit" class="btn btn-warning">Edit</a>
                 <?php
                 if($player->isadmin){
                     ?>

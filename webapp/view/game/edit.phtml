@@ -1,0 +1,55 @@
+<?php
+use ArmoredCore\WebObjects\Asset;
+use ArmoredCore\Facades\AssetBundler;
+use ArmoredCore\WebObjects\URL;
+use ArmoredCore\WebObjects\Session;
+$user = Session::get('player');
+$date = strtotime($user->datanascimento);
+$date = date('Y-m-d', $date);
+echo $date;
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?= Asset::css('/bootstrap4.min.css')?>" media="screen" >
+    <link rel="stylesheet" href="<?= Asset::css('/game.css')?>" media="screen" >
+    <title>Backoffice</title>
+</head>
+<body>
+<div class="container main">
+    <div class="row justify-content-center">
+        <div class="col">
+            <div id="top10" class="box text-center pt-3 pb-5">
+                <h1>Edit Profile</h1>
+                <br>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-6">
+                            <form method="post" action="<?= URL::toRoute('game/confirmEdit') ?>">
+                                <label>Full Name</label>
+                                <input class="form-control" name="nomecompleto" required type="text" value="<?php echo $user->nomecompleto ?>">
+                                <br>
+                                <label>Birth Date</label>
+                                <input class="form-control" name="datanascimento" required value="<?php echo $date ?>" type="date">
+                                <br>
+                                <label>Email</label>
+                                <input class="form-control" name="email" required value="<?php echo $user->email ?>" type="email">
+                                <br>
+                                <label>Password</label>
+                                <input class="form-control" name="password" required value="" type="Password">
+                                <br>
+                                <input type="submit" class="btn btn-dark" value="Edit">
+                                <a href="index" class="btn btn-dark">Cancel</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

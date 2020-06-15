@@ -26,12 +26,18 @@ Router::post('game/createAccount', 'GameController/createAccount');
 Router::get('game/login', 'GameController/login');
 Router::post('game/authenticate', 'GameController/authenticate');
 Router::post('game/logout', 'GameController/logout');
+Router::get('game/game', 'GameController/game');
 Router::post('game/game', 'GameController/game');
+Router::get('game/newGame', 'GameController/newGame');
+Router::get('game/select', 'GameController/select');
+Router::get('game/giveup', 'GameController/giveup');
 Router::get('game/backoffice', 'GameController/backoffice');
 Router::get('game/changebanstatus', 'GameController/changebanstatus');
 Router::get('game/top10', 'GameController/top10');
+Router::get('game/edit', 'GameController/edit');
+Router::post('game/confirmEdit', 'GameController/confirmEdit');
 
-Router::post('gameLogic/lancarDados', 'GameLogicController/lancarDados');
+Router::get('game/lancarDados', 'GameController/lancarDados');
 
 
 
